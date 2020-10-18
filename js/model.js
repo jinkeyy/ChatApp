@@ -24,10 +24,18 @@ model.register =  async ({firstName,lastName,email,password}) => {
 model.login = async({email,password}) => {
     console.log("Đăng nhập")
     try {
-        firebase.auth().signInWithEmailAndPassword(email, password)
-        alert("Đăng nhập thành công")
-    } catch (error) {
-        console.log(error)
-        alert("Tài khoản hoặc mật khẩu sai\n vui lòng nhập lại !!!")
+        const response = await firebase.auth().signInWithEmailAndPassword(email,password)
+        alert("đăng nhập thành công")
+        console.log(response)
+    } catch (err) {
+        alert("Tài khoản hoặc mật khẩu sai Vui lòng nhập lại !!!")
+        console.log(err.message)
     }
+}
+model.addToFireStore = async (data) => {
+     const ID = "0fMjl9jcFDCXmU4kIr5S"
+     const dataToAdd = {
+        messages:firebase.firestore.FieldValue.arrayUnion(data)
+     }
+     await firebase.firestore().collection("conversations").doc(ID).update(dataToAdd)
 }
